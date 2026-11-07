@@ -1,0 +1,36 @@
+template:
+  - cover:
+      - name: "Example blind 1"
+        unique_id: example_blind_1
+        optimistic: true
+        open_cover:
+          - action: button.press
+            target:
+              entity_id: button.velux_bridge_blind_1_open
+        close_cover:
+          - action: button.press
+            target:
+              entity_id: button.velux_bridge_blind_1_close
+        stop_cover:
+          - action: button.press
+            target:
+              entity_id: button.velux_bridge_blind_1_stop
+
+      - name: "Example blind 2"
+        unique_id: example_blind_2
+        optimistic: true
+        open_cover:
+          - action: button.press
+            target:
+              entity_id: button.velux_bridge_blind_2_open
+        close_cover:
+          - action: button.press
+            target:
+              entity_id: button.velux_bridge_blind_2_close
+        stop_cover:
+          - action: button.press
+            target:
+              entity_id: button.velux_bridge_blind_2_stop
+
+# Duplicate the pattern for blinds 3 and 4 after the ESPHome device exposes
+# matching button entities. Entity IDs are examples, not discovered IDs.

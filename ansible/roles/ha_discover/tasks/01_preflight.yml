@@ -1,0 +1,75 @@
+---
+- name: Set API headers for authenticated discovery requests
+  ansible.builtin.set_fact:
+    ha_api_headers: "{{ (ha_api_token | default('') | length > 0) | ternary({'Authorization': 'Bearer ' ~ ha_api_token}, {}) }}"
+  no_log: true
+
+- name: Probe the Home Assistant API root endpoint
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/api/"
+    method: GET
+    headers: "{{ ha_api_headers }}"
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_api_root
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost
+
+- name: Probe the configured SSH endpoint from the controller
+  ansible.builtin.wait_for:
+    host: "{{ ansible_host }}"
+    port: "{{ ansible_port | int }}"
+    state: started
+    timeout: 5
+  register: ha_ssh_probe
+  changed_when: false
+  failed_when: false
+  delegate_to: localhost
+
+- name: Record whether the configured SSH endpoint is reachable
+  ansible.builtin.set_fact:
+    ha_ssh_probe_reachable: "{{ (ha_ssh_probe.msg | default('') | length) == 0 }}"
+
+- name: Authenticate to the configured SSH endpoint from the controller
+  ansible.builtin.command:
+    argv:
+      - ssh
+      - -o
+      - BatchMode=yes
+      - -o
+      - ConnectTimeout=5
+      - -o
+      - PreferredAuthentications=publickey
+      - -o
+      - PasswordAuthentication=no
+      - -p
+      - "{{ ansible_port | string }}"
+      - "{{ ansible_user }}@{{ ansible_host }}"
+      - "true"
+  register: ha_ssh_auth_probe
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost
+
+- name: Record whether SSH authentication succeeded
+  ansible.builtin.set_fact:
+    ha_ssh_authenticated: "{{ (ha_ssh_auth_probe.rc | default(1) | int) == 0 }}"
+
+- name: Probe the Home Assistant base web endpoint
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/"
+    method: GET
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_web_root
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost

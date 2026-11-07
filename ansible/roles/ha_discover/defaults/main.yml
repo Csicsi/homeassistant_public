@@ -1,0 +1,5 @@
+---
+ha_discover_timeout: 15
+ha_discover_api_headers: {}
+ha_discover_report_path: "{{ playbook_dir }}/../generated/discovery-report.md"
+ha_discover_proposal_path: "{{ playbook_dir }}/../generated/discovery-proposal.json"

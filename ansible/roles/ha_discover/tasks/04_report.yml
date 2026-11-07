@@ -1,0 +1,21 @@
+---
+- name: Ensure report directory exists
+  ansible.builtin.file:
+    path: "{{ ha_discover_report_path | dirname }}"
+    state: directory
+    mode: "0755"
+  delegate_to: localhost
+
+- name: Render discovery report markdown
+  ansible.builtin.template:
+    src: discovery_report.md.j2
+    dest: "{{ ha_discover_report_path }}"
+    mode: "0640"
+  delegate_to: localhost
+
+- name: Render sanitized discovery proposal
+  ansible.builtin.template:
+    src: discovery_proposal.json.j2
+    dest: "{{ ha_discover_proposal_path }}"
+    mode: "0640"
+  delegate_to: localhost

@@ -1,0 +1,16 @@
+---
+- name: Discover a Home Assistant installation
+  hosts: homeassistant
+  gather_facts: false
+  vars:
+    ha_api_token: "{{ lookup('env', 'HOME_ASSISTANT_TOKEN') }}"
+    ha_discover_include_container_inventory: false
+  pre_tasks:
+    - name: Require the API token from the environment
+      ansible.builtin.assert:
+        that:
+          - ha_api_token | length > 0
+        fail_msg: "Set HOME_ASSISTANT_TOKEN; do not put tokens in inventory."
+      no_log: true
+  roles:
+    - ha_discover

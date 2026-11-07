@@ -1,0 +1,19 @@
+{
+  "generated_at": "{{ lookup('pipe', 'date -u +"%Y-%m-%dT%H:%M:%SZ"') }}",
+  "api_root_status": "{{ ha_api_root.status | default('not_checked') }}",
+  "web_root_status": "{{ ha_web_root.status | default('not_checked') }}",
+  "ssh_endpoint_status": "{{ (ha_ssh_probe_reachable | default(false) | bool) | ternary('reachable', 'unreachable') }}",
+  "ssh_authentication_status": "{{ (ha_ssh_authenticated | default(false) | bool) | ternary('successful', 'failed') }}",
+  "config_endpoint_status": "{{ ha_config_status.status | default('not_checked') }}",
+  "supervisor_status": "{{ ha_supervisor_status.status | default('not_checked') }}",
+  "addons_status": "{{ ha_addons_status.status | default('not_checked') }}",
+  "state_inventory_status": "{{ ha_state_inventory.status | default('not_checked') }}",
+  "entity_registry_status": "{{ ha_entity_registry.status | default('not_checked') }}",
+  "area_registry_status": "{{ ha_area_registry.status | default('not_checked') }}",
+  "proposed_actions": [
+    "Verify the target before making changes.",
+    "Confirm how integrations and add-ons are managed.",
+    "Preserve credentials, Zigbee network identity, and pairing data.",
+    "Use a dry run before production configuration changes."
+  ]
+}

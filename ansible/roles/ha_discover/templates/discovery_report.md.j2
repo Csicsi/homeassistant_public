@@ -1,0 +1,27 @@
+# Home Assistant Discovery Report
+
+Generated: {{ lookup('pipe', 'date -u +"%Y-%m-%dT%H:%M:%SZ"') }}
+
+This report intentionally omits the target hostname, URL, SSH identity,
+entity names, area names, serial paths, and raw terminal output.
+
+## Endpoint status
+
+- API root: {{ ha_api_root.status | default('not_checked') }}
+- Web endpoint: {{ ha_web_root.status | default('not_checked') }}
+- SSH endpoint: {{ (ha_ssh_probe_reachable | default(false) | bool) | ternary('reachable', 'unreachable') }}
+- SSH authentication: {{ (ha_ssh_authenticated | default(false) | bool) | ternary('successful', 'failed') }}
+- Config endpoint: {{ ha_config_status.status | default('not_checked') }}
+- Supervisor endpoint: {{ ha_supervisor_status.status | default('not_checked') }}
+- Add-ons endpoint: {{ ha_addons_status.status | default('not_checked') }}
+- Entity inventory: {{ ha_state_inventory.status | default('not_checked') }}
+- Entity registry: {{ ha_entity_registry.status | default('not_checked') }}
+- Area registry: {{ ha_area_registry.status | default('not_checked') }}
+
+## Safety rules
+
+- Keep reports local unless their contents have been reviewed.
+- Never write API tokens, passwords, serial paths, entity names, or raw
+  terminal output to a public repository.
+- Preserve Zigbee network identity, keys, pairing data, and backups.
+- Validate changes before applying them to a live installation.

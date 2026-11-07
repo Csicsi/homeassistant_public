@@ -1,0 +1,9 @@
+.secrets.yaml
+*.secret.yaml
+*.vault
+secrets.yaml
+*.webp
+generated/
+output/
+__pycache__/
+*.py[cod]

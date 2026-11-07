@@ -1,0 +1,90 @@
+---
+- name: Query the Home Assistant config endpoint
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/api/config"
+    method: GET
+    headers: "{{ ha_api_headers }}"
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_config_status
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost
+
+- name: Query the Home Assistant Supervisor endpoint
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/api/hassio" 
+    method: GET
+    headers: "{{ ha_api_headers }}"
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_supervisor_status
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost
+
+- name: Query the Home Assistant add-on listing
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/api/hassio/addons"
+    method: GET
+    headers: "{{ ha_api_headers }}"
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_addons_status
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost
+
+- name: Query the current entity state inventory
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/api/states"
+    method: GET
+    headers: "{{ ha_api_headers }}"
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_state_inventory
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost
+
+- name: Query the entity registry for light aliases and areas
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/api/config/entity_registry/list"
+    method: GET
+    headers: "{{ ha_api_headers }}"
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_entity_registry
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost
+
+- name: Query the area registry for human-readable area names
+  ansible.builtin.uri:
+    url: "{{ ha_url }}/api/config/area_registry/list"
+    method: GET
+    headers: "{{ ha_api_headers }}"
+    return_content: true
+    status_code: [200, 401, 403, 404, 503]
+    validate_certs: true
+    timeout: 15
+  register: ha_area_registry
+  changed_when: false
+  failed_when: false
+  no_log: true
+  delegate_to: localhost

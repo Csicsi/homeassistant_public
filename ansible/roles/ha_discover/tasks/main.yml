@@ -1,0 +1,13 @@
+---
+- name: Include preflight connectivity checks
+  ansible.builtin.include_tasks: 01_preflight.yml
+
+- name: Collect API-level observations
+  ansible.builtin.include_tasks: 02_api_inventory.yml
+
+- name: Collect optional terminal observations
+  ansible.builtin.include_tasks: 03_container_inventory.yml
+  when: ha_discover_include_container_inventory | default(false) | bool
+
+- name: Render local discovery reports
+  ansible.builtin.include_tasks: 04_report.yml

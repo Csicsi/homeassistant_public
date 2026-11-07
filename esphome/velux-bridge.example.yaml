@@ -1,0 +1,34 @@
+substitutions:
+  device_name: velux-bridge-example
+  friendly_name: "Velux blind bridge example"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: YOUR_ESP32_BOARD
+  framework:
+    type: esp-idf
+
+logger:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+switch:
+  - platform: gpio
+    name: "Blind 1 open relay"
+    pin: YOUR_GPIO_FOR_BLIND_1_OPEN
+  - platform: gpio
+    name: "Blind 1 close relay"
+    pin: YOUR_GPIO_FOR_BLIND_1_CLOSE

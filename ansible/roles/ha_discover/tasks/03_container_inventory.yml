@@ -1,0 +1,26 @@
+---
+- name: Inspect the Home Assistant terminal container and optional serial paths
+  ansible.builtin.raw: |
+    set -e
+    echo "## ha"
+    if command -v ha >/dev/null 2>&1; then
+      ha core info 2>/dev/null || true
+      echo "---"
+      ha supervisor info 2>/dev/null || true
+      echo "---"
+      ha addons list 2>/dev/null || true
+    else
+      echo "ha-command-not-found"
+    fi
+    echo "## serial"
+    ls -l /dev/serial/by-id 2>/dev/null || true
+    echo "## config"
+    ls -ld /config /config/automations /config/packages /config/custom_components 2>/dev/null || true
+  register: ha_terminal_inventory
+  changed_when: false
+  failed_when: false
+  no_log: true
+  when:
+    - ha_ssh_probe_reachable | default(false) | bool
+    - ha_ssh_authenticated | default(false) | bool
+  ignore_unreachable: true
